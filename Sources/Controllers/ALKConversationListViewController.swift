@@ -45,7 +45,15 @@ public final class ALKConversationListViewController: ALKBaseViewController {
     }()
 
     required public init() {
+        
         super.init(nibName: nil, bundle: nil)
+        
+        let leftBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: self, action: #selector(customBackAction))
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+
+        
+        let rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil), style: .plain, target: self, action: #selector(compose))
+        navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -140,6 +148,8 @@ public final class ALKConversationListViewController: ALKBaseViewController {
     }
 
     override public func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
         super.viewWillAppear(animated)
         dbService = ALMessageDBService()
         dbService.delegate = self
@@ -149,12 +159,15 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         activityIndicator.color = UIColor.lightGray
         tableView.addSubview(activityIndicator)
         viewModel.prepareController(dbService: dbService)
+        
         self.edgesForExtendedLayout = []
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
         searchBar.delegate = self
         alMqttConversationService = ALMQTTConversationService.sharedInstance()
         alMqttConversationService.mqttConversationDelegate = self
@@ -180,18 +193,12 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         searchBar.endEditing(true)
         searchActive = false
         tableView.reloadData()
+    
     }
 
     private func setupView() {
 
         title = "My Chats"
-
-        let rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "fill_214", in: Bundle.applozic, compatibleWith: nil), style: .plain, target: self, action: #selector(compose))
-        navigationItem.rightBarButtonItem = rightBarButtonItem
-
-        let back = NSLocalizedString("Back", value: "Back", comment: "")
-        let leftBarButtonItem = UIBarButtonItem(title: back, style: .plain, target: self, action: #selector(customBackAction))
-        navigationItem.leftBarButtonItem = leftBarButtonItem
 
         #if DEVELOPMENT
             let indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
@@ -236,7 +243,7 @@ public final class ALKConversationListViewController: ALKBaseViewController {
         conversationViewController = ALKConversationViewController()
         conversationViewController?.title = title
         conversationViewController?.viewModel = convViewModel
-        self.navigationController?.pushViewController(conversationViewController!, animated: false)
+        self.navigationController?.pushViewController(conversationViewController!, animated: true)
     }
 
     func compose() {
@@ -315,7 +322,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 NSLog("view controller is empty")
                 return
             }
-            self.navigationController?.pushViewController(vc, animated: false)
+            self.navigationController?.pushViewController(vc, animated: true)
         } else {
             guard let chat = viewModel.chatForRow(indexPath: indexPath) else { return }
             let convViewModel = ALKConversationViewModel(contactId: chat.contactId, channelKey: chat.channelKey)
@@ -326,7 +333,7 @@ extension ALKConversationListViewController: UITableViewDelegate, UITableViewDat
                 NSLog("view controller is empty")
                 return
             }
-            self.navigationController?.pushViewController(vc, animated: false)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 

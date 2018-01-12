@@ -335,6 +335,7 @@ final class ALKChatBar: UIView {
         chatButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         chatButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
         chatButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
+        chatButton.isHidden = true
         
         photoButton.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 30).isActive = true
         photoButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -345,7 +346,7 @@ final class ALKChatBar: UIView {
         micButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         micButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
         micButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        
+        micButton.isHidden = true
         
         plusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
         plusButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -357,12 +358,14 @@ final class ALKChatBar: UIView {
         videoButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
 //        videoButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
         videoButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
-
+        videoButton.isHidden = true
+        
         galleryButton.leadingAnchor.constraint(equalTo: photoButton.trailingAnchor, constant: 30).isActive = true
         galleryButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         galleryButton.centerYAnchor.constraint(equalTo: bottomGrayView.centerYAnchor, constant: 0).isActive = true
-
+        galleryButton.isHidden = true
+        
         locationButton.leadingAnchor.constraint(equalTo: videoButton.trailingAnchor, constant: 30).isActive = true
         locationButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         locationButton.heightAnchor.constraint(equalToConstant: 25).isActive = true

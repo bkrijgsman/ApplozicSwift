@@ -38,12 +38,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
         return tv
     }()
 
-    fileprivate let titleButton : UIButton = {
-        let titleButton = UIButton(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-        titleButton.setTitleColor(UIColor.black, for: .normal)
-        titleButton.titleLabel?.font  = UIFont.boldSystemFont(ofSize: 17.0)
-        return titleButton
-    }()
 
     let chatBar: ALKChatBar = ALKChatBar(frame: .zero)
 
@@ -175,7 +169,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
                 guard let detail = userDetail else { return }
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
                 guard !weakSelf.viewModel.isGroup && userId == weakSelf.viewModel.contactId else { return }
-                weakSelf.titleButton.setTitle(detail.getDisplayName(), for: .normal)
+                weakSelf.navigationItem.title = detail.getDisplayName()
             })
         })
 
@@ -186,7 +180,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
             guard weakSelf.viewModel.isGroup else { return }
             let alChannelService = ALChannelService()
             guard let key = weakSelf.viewModel.channelKey, let channel = alChannelService.getChannelByKey(key), let name = channel.name else { return }
-            weakSelf.titleButton.setTitle(name, for: .normal)
+            weakSelf.navigationItem.title = name
             })
     }
 
@@ -209,6 +203,9 @@ public final class ALKConversationViewController: ALKBaseViewController {
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             tableView.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
         }
+        
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
         view.backgroundColor = UIColor.white
         self.edgesForExtendedLayout = []
         activityIndicator.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
@@ -273,7 +270,7 @@ public final class ALKConversationViewController: ALKBaseViewController {
         unsubscribingChannel()
     }
 
-    override func backTapped() {
+    override public func backTapped() {
         print("back tapped")
         self.viewModel.sendKeyboardDoneTyping()
         _ = navigationController?.popToRootViewController(animated: true)
@@ -318,9 +315,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
 
     private func setupNavigation() {
 
-        titleButton.setTitle(self.title, for: .normal)
-        titleButton.addTarget(self, action: #selector(showParticipantListChat), for: .touchUpInside)
-        self.navigationItem.titleView = titleButton
     }
 
     private func prepareTable() {
@@ -341,10 +335,6 @@ public final class ALKConversationViewController: ALKBaseViewController {
         tableView.tableFooterView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: tableView.bounds.size.width, height: 8))
 
         self.automaticallyAdjustsScrollViewInsets = false
-
-        if #available(iOS 11.0, *) {
-            tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.never
-        }
         tableView.estimatedRowHeight = 0
 
         tableView.register(ALKMyMessageCell.self)
@@ -680,7 +670,8 @@ extension ALKConversationViewController: ALKConversationViewModelDelegate {
 
     func updateDisplay(name: String) {
         self.title = name
-        titleButton.setTitle(name, for: .normal)
+        navigationItem.title = name
+        
     }
 
     func addRefreshButton() {
@@ -699,13 +690,14 @@ extension ALKConversationViewController: ALKCreateGroupChatAddFriendProtocol {
     func createGroupGetFriendInGroupList(friendsSelected: [ALKFriendViewModel], groupName: String, groupImgUrl: String, friendsAdded: [ALKFriendViewModel]) {
         if viewModel.isGroupConversation() {
             self.title = groupName
-            titleButton.setTitle(self.title, for: .normal)
+            self.navigationItem.title = groupName
             
             viewModel.updateGroup(groupName: groupName, groupImage: groupImgUrl, friendsAdded: friendsAdded)
 
-            if let titleButton = navigationItem.titleView as? UIButton {
-                titleButton.setTitle(title, for: .normal)
-            }
+//            if let titleButton = navigationItem.titleView as? UIButton {
+//                titleButton.setTitle(title, for: .normal)
+//                titleButton.setTitleColor(UIColor.white, for: .normal)
+//            }
 
             let _ = navigationController?.popToViewController(self, animated: true)
         }
@@ -913,7 +905,7 @@ extension ALKConversationViewController: ALMQTTConversationDelegate {
             guard let detail = userDetail else { return }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "USER_DETAIL_OTHER_VC"), object: detail)
             guard !self.viewModel.isGroup && userId == self.viewModel.contactId else { return }
-            self.titleButton.setTitle(detail.getDisplayName(), for: .normal)
+            self.navigationItem.title = detail.getDisplayName()
         })
     }
 }

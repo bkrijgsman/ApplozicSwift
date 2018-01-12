@@ -19,7 +19,7 @@ protocol ALKConversationViewModelDelegate: class {
     func updateDisplay(name: String)
 }
 
-final class ALKConversationViewModel: NSObject {
+class ALKConversationViewModel: NSObject {
 
     var contactId: String?
     var channelKey: NSNumber?
